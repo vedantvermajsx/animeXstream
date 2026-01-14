@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import FetchData from "./FetchData";
 import Card from "./Card";
 import Tags from "./Tags";
@@ -58,6 +58,7 @@ const AnimeList = () => {
   );
 
   return (
+    
     <div className="bg-gray-900 max-w-screen h-full gap-4 p-4 place-items-center">
       <Tags setSelectedTags={setSelectedTags} />
 
@@ -76,6 +77,7 @@ const AnimeList = () => {
         {animeList.map((anime, index) => {
           if (index === animeList.length - 1) {
             return (
+              <Suspense fallback={<div className="temp-card animate-pulse bg-gray-700 h-64 w-full rounded-md"></div>}>
               <Card
                 ref={lastAnimeElementRef}
                 key={anime.mal_id}
@@ -90,6 +92,7 @@ const AnimeList = () => {
                 episodes={anime.episodes}
                 className="h-64"
               />
+              </Suspense>
             );
           }
           return (
