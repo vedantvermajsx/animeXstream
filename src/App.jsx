@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./Routes/Home";
-import Play from "./Routes/Play";
+import Home from "./routes/Home";
+import Play from "./routes/Play";
 import Footer from "./components/Footer";
-import Watch from "./Routes/Watch";
+import Watch from "./routes/Watch";
 function App() {
   return (
     <>
