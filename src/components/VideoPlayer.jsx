@@ -1,16 +1,19 @@
 import React from 'react'
 
-const VideoPlayer = ({url,title}) => {
+const VideoPlayer = ({ url, title }) => {
+  if (!url) return null;
+  
   return (
-    <div className="relative bg-black mt-6">
-    <iframe
+    <div className="relative w-full h-full bg-black">
+      <iframe
         src={url}
-        title={`${title} Trailer`}
+        title={title}
         allowFullScreen
-        className="w-full h-64 sm:h-96"
-    ></iframe>
-</div>
-  )
-}
+        className="w-full h-full border-0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    </div>
+  );
+};
 
 export default VideoPlayer;

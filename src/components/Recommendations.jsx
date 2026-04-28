@@ -2,15 +2,16 @@ import React from 'react';
 import RecommendationCard from './RecommendationCard';
 
 const Recommendations = ({ recommendations }) => {
+  if (!recommendations || recommendations.length === 0) {
+    return <p className="text-gray-500 italic">No recommendations available</p>;
+  }
+
   return (
-    <div className="mt-6">
-      <h2 className="text-2xl font-bold">Recommendations</h2>
-      <div className="mt-4">
-      <div className="flex overflow-x-scroll space-x-4 scroll-smooth scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 scrollbar-rounded">
-      {recommendations.map((recommendation) => (
-           <RecommendationCard recommendation={recommendation}></RecommendationCard>
-          ))}
-        </div>
+    <div className="relative">
+      <div className="flex overflow-x-auto pb-4 gap-4 scroll-smooth scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-gray-900">
+        {recommendations.map((recommendation) => (
+          <RecommendationCard key={recommendation.entry.mal_id} recommendation={recommendation} />
+        ))}
       </div>
     </div>
   );

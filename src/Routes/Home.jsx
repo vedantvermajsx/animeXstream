@@ -1,12 +1,13 @@
 import AnimeList from "../components/AnimeList";
 import Hero from "../components/Hero";
-import FavouritesAnime from "../components/FavouritesAnime";
+import Header from "../components/Header";
 
 function Home() {
   return (
     <>
-      <Hero></Hero>
-      <AnimeList></AnimeList>
+      <Header isHome={true} />
+      <Hero />
+      <AnimeList />
     </>
   );
 }

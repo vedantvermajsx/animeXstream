@@ -28,11 +28,16 @@ function FavouritesAnime() {
   }, []);
 
   if (Favourites.length === 0) {
-    return <></>;
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+        <p className="text-lg font-medium">No favorites yet</p>
+        <p className="text-sm">Click the heart icon on any anime to add it here.</p>
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
       {Favourites.map((anime) => (
         <Card
           key={anime.id}
@@ -47,7 +52,7 @@ function FavouritesAnime() {
           episodes={anime.episodes}
         />
       ))}
-    </>
+    </div>
   );
 }
 

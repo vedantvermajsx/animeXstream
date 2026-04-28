@@ -58,74 +58,66 @@ const AnimeList = () => {
   );
 
   return (
-    
-    <div className="bg-gray-900 max-w-screen h-full gap-4 p-4 place-items-center">
-      <Tags setSelectedTags={setSelectedTags} />
+    <div className="bg-gray-950 min-h-screen pb-12">
+      <div className="container mx-auto px-4">
+        <div className="py-8">
+          <Tags setSelectedTags={setSelectedTags} />
+        </div>
 
-      <h1 className="text-white text-left text-2xl font-bold">Favourites</h1>
-      <div className="min-h-0 flex flex-wrap place-items-center place-content-evenly">
-        <FavouritesAnime />
-      </div>
-
-      <div className="bg-gray-900 max-w-screen h-full grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-        {animeList.length === 0 && !loading && (
-          <div className="text-white col-span-full text-center">
-            No anime found.
+        <section className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <span className="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+              Your Favourites
+            </h2>
           </div>
-        )}
+          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+            <FavouritesAnime />
+          </div>
+        </section>
 
-        {animeList.map((anime, index) => {
-          if (index === animeList.length - 1) {
-            return (
-              <Suspense fallback={<div className="temp-card animate-pulse bg-gray-700 h-64 w-full rounded-md"></div>}>
-              <Card
-                ref={lastAnimeElementRef}
-                key={anime.mal_id}
-                id={anime.mal_id}
-                title={anime.title}
-                ageTag={anime.rating}
-                image={anime.images.jpg.image_url}
-                rank={anime.rank}
-                rating={anime.score}
-                status={anime.status}
-                genres={anime.genres}
-                episodes={anime.episodes}
-                className="h-64"
-              />
+        <section>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <span className="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+              {selectedTags.length > 0 ? 'Filtered Results' : 'Explore Anime'}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            {animeList.map((anime, index) => (
+              <Suspense 
+                key={`${anime.mal_id}-${index}`}
+                fallback={<div className="aspect-[3/4] animate-pulse bg-gray-800 rounded-xl"></div>}
+              >
+                <Card
+                  ref={index === animeList.length - 1 ? lastAnimeElementRef : null}
+                  id={anime.mal_id}
+                  title={anime.title}
+                  ageTag={anime.rating}
+                  image={anime.images.jpg.image_url}
+                  rank={anime.rank}
+                  rating={anime.score}
+                  status={anime.status}
+                  genres={anime.genres}
+                  episodes={anime.episodes}
+                />
               </Suspense>
-            );
-          }
-          return (
-            <Card
-              key={anime.mal_id}
-              id={anime.mal_id}
-              title={anime.title}
-              ageTag={anime.rating}
-              image={anime.images.jpg.image_url}
-              rank={anime.rank}
-              rating={anime.score}
-              status={anime.status}
-              genres={anime.genres}
-              episodes={anime.episodes}
-              className="h-64"
-            />
-          );
-        })}
-
-        {loading &&
-          animeList.length === 0 &&
-          Array.from({ length: 10 }).map((_, index) => (
-            <div
-              key={`temp-card-${index}`}
-              className="temp-card animate-pulse bg-gray-700 h-64 w-full rounded-md"
-            ></div>
-          ))}
-
-        {loading && animeList.length > 0 && (
-          <div className="text-white col-span-full text-center">
-            Loading more anime...
+            ))}
           </div>
-        )}
+
+          {loading && (
+            <div className="flex justify-center mt-12">
+              <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+
+          {!loading && animeList.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-gray-500 text-lg">No anime found matching your criteria.</p>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
-"use client"
-
-import { useState } from "react"
+import { useState } from "react";
+import { ThumbsUp, Heart, Star, Calendar, MessageCircle, ChevronDown, ChevronUp, User, Quote } from "lucide-react";
 
 const reactionEmojis = {
   nice: "👍",
@@ -10,130 +9,134 @@ const reactionEmojis = {
   informative: "📚",
   well_written: "✍️",
   creative: "🎨",
-}
+};
 
-const Comment = ({ item, index, expanded, toggleExpand }) => {
-  const [isLiked, setIsLiked] = useState(false)
-  const [showReplyForm, setShowReplyForm] = useState(false)
-  const [replyText, setReplyText] = useState("")
+const Comment = ({ item, index }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
-  const { user = {}, review, date, reactions = {} } = item
-
-  const fallbackAvatar = user.username?.charAt(0)?.toUpperCase() || "?"
+  const { user = {}, review = "", date, reactions = {}, score, is_spoiler } = item;
+  const fallbackAvatar = user.username?.charAt(0)?.toUpperCase() || "?";
 
   const formatDate = (dateStr) => {
-    const d = new Date(dateStr)
-    const now = new Date()
-    const diff = (now - d) / (1000 * 60 * 60 * 24)
-    if (diff < 1) return "Today"
-    if (Math.floor(diff) === 1) return "Yesterday"
-    if (diff < 7) return `${Math.floor(diff)} days ago`
-    return d.toLocaleDateString()
-  }
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
+  const isLongReview = review.length > 300;
 
   return (
-    <div className="group bg-gradient-to-br from-slate-800/80 to-slate-900 border border-slate-700 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-      {/* User Info */}
-      <div className="flex items-start space-x-4 mb-4">
-        {user.images?.jpg?.image_url ? (
-          <img
-            src={user.images.jpg.image_url}
-            alt={user.username}
-            className="w-12 h-12 rounded-full border-2 border-blue-500 object-cover"
-          />
-        ) : (
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white font-semibold text-lg border-2 border-slate-700">
-            {fallbackAvatar}
+    <div className="bg-gray-900/60 backdrop-blur-md border border-gray-800/50 p-6 rounded-[2rem] hover:border-blue-500/30 transition-all duration-500 group relative overflow-hidden shadow-2xl">
+      {/* Background Decorative Element */}
+      <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-600/5 rounded-full blur-3xl group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+      
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6 relative z-10">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-blue-600/20 rounded-2xl blur-sm group-hover:blur-md transition-all"></div>
+            {user.images?.jpg?.image_url ? (
+              <img
+                src={user.images.jpg.image_url}
+                alt={user.username}
+                className="w-14 h-14 rounded-2xl object-cover border-2 border-gray-800 group-hover:border-blue-500/50 transition-all relative z-10"
+              />
+            ) : (
+              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-xl border-2 border-gray-800 relative z-10">
+                {fallbackAvatar}
+              </div>
+            )}
+            <div className="absolute -bottom-2 -right-2 bg-gray-950 border-2 border-gray-800 rounded-xl px-2 py-1 text-[11px] font-black text-yellow-500 flex items-center gap-1 shadow-lg z-20">
+              <Star size={12} className="fill-yellow-500" />
+              {score}
+            </div>
           </div>
-        )}
-
-        <div className="flex-1">
-          <div className="flex justify-between items-center">
-            <h4 className="text-white font-semibold">{user.username}</h4>
-            <span className="text-xs text-slate-400">#{index + 1}</span>
+          <div>
+            <h4 className="text-white text-lg font-black group-hover:text-blue-400 transition-colors flex items-center gap-2">
+              {user.username}
+              {index === 0 && (
+                <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">Top Review</span>
+              )}
+            </h4>
+            <div className="flex items-center gap-4 mt-1.5">
+              <span className="text-[11px] text-gray-400 flex items-center gap-1.5 font-bold uppercase tracking-wider">
+                <Calendar size={12} className="text-blue-500" />
+                {formatDate(date)}
+              </span>
+              {is_spoiler && (
+                <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-lg font-black uppercase tracking-widest animate-pulse">
+                  Spoiler Warning
+                </span>
+              )}
+            </div>
           </div>
-          <p className="text-xs text-slate-500">{formatDate(date)}</p>
+        </div>
+        <div className="flex flex-col items-end gap-1">
+          <span className="text-2xl font-black text-gray-800 group-hover:text-blue-900/30 transition-colors">
+            {String(index + 1).padStart(2, '0')}
+          </span>
         </div>
       </div>
 
-      {/* Comment */}
-      <p className="text-slate-300 leading-relaxed mb-2 whitespace-pre-line">
-        {expanded ? review : `${review.slice(0, 150)}...`}
-      </p>
-      {review.length > 150 && (
-        <button
-          onClick={() => toggleExpand(index)}
-          className="text-sm text-blue-400 hover:underline"
-        >
-          {expanded ? "Show less" : "Show more"}
-        </button>
-      )}
+      {/* Content Area */}
+      <div className="relative z-10 bg-gray-950/40 rounded-2xl p-4 border border-gray-800/30">
+        <Quote className="absolute -top-2 -left-2 text-gray-800 w-8 h-8 -rotate-12 opacity-50" />
+        <div className="relative">
+          <p className={`text-gray-200 leading-relaxed text-[15px] font-medium whitespace-pre-line selection:bg-blue-500/30 ${!isExpanded ? 'line-clamp-5' : ''}`}>
+            {review}
+          </p>
+          
+          {isLongReview && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="mt-4 w-full py-2 flex items-center justify-center gap-2 text-xs font-black text-blue-400 hover:text-white bg-blue-500/5 hover:bg-blue-600 rounded-xl transition-all border border-blue-500/10 hover:border-blue-500 shadow-sm"
+            >
+              {isExpanded ? (
+                <>Collapse Review <ChevronUp size={14} /></>
+              ) : (
+                <>Read Full Experience <ChevronDown size={14} /></>
+              )}
+            </button>
+          )}
+        </div>
+      </div>
 
-      {/* Reactions */}
-      <div className="flex justify-between items-center mt-4 flex-wrap gap-2">
+      {/* Footer / Actions */}
+      <div className="mt-6 pt-6 border-t border-gray-800/50 flex items-center justify-between flex-wrap gap-4 relative z-10">
         <div className="flex flex-wrap gap-2">
           {Object.entries(reactions).map(([type, count]) =>
             type !== "overall" && count > 0 && reactionEmojis[type] ? (
               <div
                 key={type}
-                className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-full text-sm flex items-center gap-1 text-white shadow-sm transition"
+                className="px-3 py-1.5 bg-gray-800/30 hover:bg-gray-800 rounded-xl text-xs flex items-center gap-2 text-gray-300 border border-gray-700/30 hover:border-blue-500/30 transition-all cursor-default"
+                title={type.replace('_', ' ')}
               >
-                <span>{reactionEmojis[type]}</span>
-                <span className="font-medium">{count}</span>
+                <span className="text-sm">{reactionEmojis[type]}</span>
+                <span className="font-black">{count}</span>
               </div>
             ) : null
           )}
         </div>
 
-        <div className="flex gap-4 text-sm text-slate-400">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setIsLiked(!isLiked)}
-            className={`hover:text-red-400 transition ${
-              isLiked ? "text-red-500" : ""
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition-all border ${
+              isLiked 
+                ? "bg-red-500/10 text-red-500 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]" 
+                : "bg-gray-800/30 text-gray-400 border-gray-700/30 hover:text-red-400 hover:border-red-500/30"
             }`}
           >
-            ❤️ Like
+            <Heart size={14} className={isLiked ? "fill-red-500" : ""} />
+            {isLiked ? "Helpful" : "Was this helpful?"}
           </button>
-          <button
-            onClick={() => setShowReplyForm(!showReplyForm)}
-            className="hover:text-blue-400"
-          >
-            💬 Reply
+          <button className="p-2.5 rounded-xl bg-gray-800/30 text-gray-400 border border-gray-700/30 hover:text-blue-400 hover:border-blue-500/30 transition-all">
+            <MessageCircle size={18} />
           </button>
         </div>
       </div>
-
-      {/* Reply Box */}
-      {showReplyForm && (
-        <div className="mt-5 animate-in fade-in slide-in-from-top-1 duration-300">
-          <textarea
-            rows={3}
-            maxLength={300}
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Write your reply..."
-            className="w-full p-3 rounded-lg bg-slate-700 text-slate-200 border border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
-          />
-          <div className="flex justify-end gap-2 mt-3">
-            <button
-              onClick={() => {
-                setShowReplyForm(false)
-                setReplyText("")
-              }}
-              className="text-sm text-slate-400 hover:text-slate-200"
-            >
-              Cancel
-            </button>
-            <button
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium"
-            >
-              Reply
-            </button>
-          </div>
-        </div>
-      )}
     </div>
-  )
-}
+  );
+};
 
-export default Comment
+export default Comment;

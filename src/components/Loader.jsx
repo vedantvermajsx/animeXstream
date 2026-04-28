@@ -2,14 +2,24 @@ import React from "react";
 
 const Loader = () => {
   return (
-    <div className="flex items-center justify-center relative w-screen h-screen bg-gray-900">
-      <div className="relative w-28 h-28 -ml-24 sm:ml-0">
-        <div className="absolute w-28 h-12 mt-16 ml-0 border-4 border-gray-200 box-border animate-box1"></div>
-        <div className="absolute w-12 h-12 mt-0 ml-0 border-4 border-gray-200 box-border animate-box2"></div>
-        <div className="absolute w-12 h-12 mt-0 ml-16 border-4 border-gray-200 box-border animate-box3"></div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950">
+      <div className="relative w-24 h-24">
+        {/* Outer Ring */}
+        <div className="absolute inset-0 border-4 border-blue-600/20 rounded-full"></div>
+        {/* Spinning Ring */}
+        <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+        {/* Logo/Icon in middle */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-12 h-12 bg-blue-600 rounded-2xl rotate-45 animate-pulse"></div>
+        </div>
       </div>
-      <div className="-ml-8 sm:ml-4 mt-2 left-1/2 top-3/4 text-white text-lg font-semibold absolute animate-pulse">
-        Loading...
+      <div className="mt-8 text-center">
+        <h2 className="text-xl font-black text-white tracking-widest uppercase animate-pulse">
+          AnimeXtream
+        </h2>
+        <p className="text-gray-500 text-xs mt-2 font-bold uppercase tracking-[0.2em]">
+          Loading Experience
+        </p>
       </div>
     </div>
   );

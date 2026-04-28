@@ -79,86 +79,54 @@ const Card = React.forwardRef(
     }
 
     return (
-      <Link to={`/play/${id}`} ref={ref} className="block">
-        <div className="bg-gray-900 rounded-lg shadow-2xl p-4 max-w-xs text-white relative min-w-[300px]">
-          <div className="relative h-56 rounded-lg overflow-hidden">
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url(${image})`,
-                filter: "blur(6px)",
-              }}
-            ></div>
-            <div className="absolute inset-0 bg-black opacity-50"></div>
-
+      <Link to={`/play/${id}`} ref={ref} className="group block">
+        <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2 border border-gray-700 hover:border-blue-500">
+          <div className="relative aspect-[3/4] overflow-hidden">
             <img
               src={image}
               alt={title}
-              className="relative z-10 w-full h-full object-contain"
+              className="w-full h-full object-cover transition-transform duration-500"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
+            
+            <div className="absolute top-2 right-2 z-20">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleFavoriteClick();
+                }}
+                className={`p-2 rounded-full backdrop-blur-md transition-colors ${
+                  isFavorite ? "bg-red-500 text-white" : "bg-black/40 text-gray-300 hover:bg-black/60"
+                }`}
+              >
+                <Heart size={18} fill={isFavorite ? "currentColor" : "none"} />
+              </button>
+            </div>
 
-            <span
-              className="absolute top-2 text-stone-800 left-2 text-xs uppercase font-semibold px-3 py-1 rounded backdrop-blur-sm bg-white/30"
-              style={{ zIndex: 20 }}
-            >
-              {status}
-            </span>
+            {rating && (
+              <div className="absolute bottom-2 left-2 z-20 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded">
+                ★ {rating}
+              </div>
+            )}
+            
+            {status && (
+              <div className="absolute top-2 left-2 z-20 bg-black/60 backdrop-blur-sm text-white text-[10px] uppercase font-bold px-2 py-1 rounded border border-gray-500/50">
+                {status}
+              </div>
+            )}
           </div>
 
-          <div className="mt-4">
-            <h2 className="text-md font-bold truncate">{title}</h2>
-            <p className="text-gray-400 text-sm">
-              {episodes} {episodes > 1 ? "episodes" : "episode"}
-            </p>
-
-            <div className="flex items-center justify-between mt-3">
-              <div className="flex items-center">
-                <span className="text-yellow-400 text-lg font-bold">
-                  {rating}
-                </span>
-                <span className="ml-1 text-sm">★</span>
-              </div>
-              <div className="text-gray-400 text-sm">
-                <span>#{rank} Ranking</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap mt-3 gap-2">
-              {genres.slice(0, 3).map((genre, index) => (
-                <span
-                  key={index}
-                  className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded"
-                >
-                  {genre.name}
-                </span>
-              ))}
-              {genres.length > 3 && (
-                <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">
-                  +{genres.length - 3}
-                </span>
-              )}
-            </div>
-
-            <div className="mt-3">
-              <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">
-                {ageTag}
+          <div className="p-4">
+            <h3 className="text-sm font-bold text-white line-clamp-2 min-h-[40px] group-hover:text-blue-400 transition-colors">
+              {title}
+            </h3>
+            <div className="mt-2 flex items-center justify-between text-[11px] text-gray-400 font-medium">
+              <span>{episodes ? `${episodes} Eps` : 'N/A'}</span>
+              <span className="bg-gray-700 px-2 py-0.5 rounded text-gray-300">
+                {ageTag || 'PG-13'}
               </span>
             </div>
           </div>
-
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleFavoriteClick();
-            }}
-            className="absolute top-2 right-2 p-2 rounded-full bg-gray-700 "
-            style={{ zIndex: 30 }}
-          >
-            <Heart
-              color={isFavorite ? "red" : "white"}
-              fill={isFavorite ? "red" : "none"}
-            />
-          </button>
         </div>
       </Link>
     );

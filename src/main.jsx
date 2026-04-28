@@ -7,7 +7,7 @@ import App from "./App";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter basename="/animeXtream">
+    <BrowserRouter basename="/animeXstream">
       <App />
     </BrowserRouter>
   </StrictMode>
