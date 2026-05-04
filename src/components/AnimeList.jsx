@@ -1,30 +1,57 @@
-import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import React, { useState, useEffect, useRef, useCallback, Suspense, useMemo } from "react";
+import { useAnime } from "../context/AnimeContext";
 import FetchData from "./FetchData";
 import Card from "./Card";
 import Tags from "./Tags";
 import FavouritesAnime from "./FavouritesAnime";
 
 const AnimeList = () => {
-  const [animeList, setAnimeList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const {
+    animeList,
+    setAnimeList,
+    page,
+    setPage,
+    selectedTags,
+    setSelectedTags,
+    searchQuery,
+    setSearchQuery,
+    hasMore,
+    setHasMore
+  } = useAnime();
+
+  const [loading, setLoading] = useState(false);
   const observer = useRef();
-  const [selectedTags, setSelectedTags] = useState([]);
   const [isFetchingData, setIsFetchingData] = useState(false);
 
-  const API = `https://api.jikan.moe/v4/anime?page=${page}${
-    selectedTags.length > 0
-      ? "&genres=" + selectedTags.map((tag) => tag.mal_id).join(",")
-      : ""
-  }`;
+  const API = useMemo(() => {
+    const q = searchQuery.trim();
+    
+    if (!q && selectedTags.length === 0) {
+      return `https://api.jikan.moe/v4/top/anime?page=${page}`;
+    }
+    
+    let url = `https://api.jikan.moe/v4/anime?page=${page}`;
+    if (q) {
+      url += `&q=${encodeURIComponent(q)}`;
+    }
+    if (selectedTags.length > 0) {
+       const genres = selectedTags.map((tag) => tag.mal_id).join(",");
+       url += `&genres=${genres}`;
+     }
+    
+    return url;
+  }, [page, selectedTags, searchQuery]);
 
-  const loadAnime = async (page) => {
+  const loadAnime = useCallback(async (targetPage, ignoreExisting = false) => {
+    if (!ignoreExisting && targetPage === 1 && animeList.length > 0 && !isFetchingData) {
+      return;
+    }
+
     setLoading(true);
     setIsFetchingData(true);
     try {
       const data = await FetchData(API);
-      setAnimeList((prev) => [...prev, ...data.data]);
+      setAnimeList((prev) => (targetPage === 1 ? data.data : [...prev, ...data.data]));
       setHasMore(data.pagination.has_next_page);
     } catch (error) {
       console.error("Error fetching anime:", error);
@@ -32,16 +59,31 @@ const AnimeList = () => {
       setLoading(false);
       setIsFetchingData(false);
     }
-  };
+  }, [API, animeList.length, isFetchingData, setAnimeList, setHasMore]);
+
+  const prevTagsRef = useRef(selectedTags);
+  const prevSearchRef = useRef(searchQuery);
 
   useEffect(() => {
-    setAnimeList([]);
-    setPage(1);
-  }, [selectedTags]);
+    const tagsChanged = prevTagsRef.current !== selectedTags;
+    const searchChanged = prevSearchRef.current !== searchQuery;
+
+    if (tagsChanged || searchChanged) {
+      setAnimeList([]);
+      setPage(1);
+      prevTagsRef.current = selectedTags;
+      prevSearchRef.current = searchQuery;
+      loadAnime(1, true);
+    } else if (animeList.length === 0) {
+      loadAnime(page);
+    }
+  }, [selectedTags, searchQuery, page, animeList.length, loadAnime, setAnimeList, setPage]);
 
   useEffect(() => {
-    loadAnime(page);
-  }, [page, selectedTags]);
+    if (page > 1) {
+      loadAnime(page);
+    }
+  }, [page, loadAnime]);
 
   const lastAnimeElementRef = useCallback(
     (node) => {
@@ -61,7 +103,7 @@ const AnimeList = () => {
     <div className="bg-gray-950 min-h-screen pb-12">
       <div className="container mx-auto px-4">
         <div className="py-8">
-          <Tags setSelectedTags={setSelectedTags} />
+          <Tags />
         </div>
 
         <section className="mb-12">
@@ -80,12 +122,12 @@ const AnimeList = () => {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
               <span className="w-1.5 h-8 bg-blue-600 rounded-full"></span>
-              {selectedTags.length > 0 ? 'Filtered Results' : 'Explore Anime'}
+              {searchQuery ? `Search results for "${searchQuery}"` : (selectedTags.length > 0 ? 'Filtered Results' : 'Top Anime')}
             </h2>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            {animeList.map((anime, index) => (
+            {useMemo(() => animeList.map((anime, index) => (
               <Suspense 
                 key={`${anime.mal_id}-${index}`}
                 fallback={<div className="aspect-[3/4] animate-pulse bg-gray-800 rounded-xl"></div>}
@@ -103,7 +145,7 @@ const AnimeList = () => {
                   episodes={anime.episodes}
                 />
               </Suspense>
-            ))}
+            )), [animeList, lastAnimeElementRef])}
           </div>
 
           {loading && (

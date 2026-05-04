@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
+import { useAnime } from '../context/AnimeContext';
 import TagData from '../TagData';
 
 import { ChevronDown, ChevronUp, Filter, X, Check } from 'lucide-react';
 
-function Tags({ setSelectedTags, clearAnimeList }) {
+function Tags() {
+    const { 
+        setSelectedTags, 
+        setAnimeList, 
+        tempSelectedTags: selectedTags, 
+        setTempSelectedTags: setSelectedTagsState 
+    } = useAnime();
     const [isExpanded, setIsExpanded] = useState(false);
-    const [selectedTags, setSelectedTagsState] = useState([]);
     const initialTagsToShow = 12;
 
     const toggleExpanded = () => {
@@ -23,12 +29,12 @@ function Tags({ setSelectedTags, clearAnimeList }) {
     const clearFilter = () => {
         setSelectedTagsState([]);
         setSelectedTags([]);
-        clearAnimeList();
+        setAnimeList([]);
     };
 
     const applyFilter = () => {
         setSelectedTags(selectedTags);
-        clearAnimeList();
+        setAnimeList([]);
     };
 
     return (

@@ -63,7 +63,6 @@ const PlayAnime = ({ id }) => {
 
     return (
         <div className="w-full bg-gray-950 text-white min-h-screen ">
-            {/* Hero Section with Backdrop */}
             <div className="relative w-full h-[40vh] md:h-[60vh] overflow-hidden">
                 <div 
                     className="absolute inset-0 bg-cover bg-center blur-sm scale-110 opacity-30"
@@ -73,7 +72,6 @@ const PlayAnime = ({ id }) => {
                 
                 <div className="absolute inset-0 flex items-end">
                     <div className="container mx-auto px-6 pb-12 flex flex-col md:flex-row gap-8 items-end">
-                        {/* Poster */}
                         <div className="hidden md:block w-64 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border-4 border-gray-900 flex-shrink-0 transform translate-y-12">
                             <img
                                 src={animeImages?.jpg?.large_image_url}
@@ -82,7 +80,6 @@ const PlayAnime = ({ id }) => {
                             />
                         </div>
                         
-                        {/* Title Info */}
                         <div className="flex-1 pb-4">
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {genres?.slice(0, 3).map((genre) => (
@@ -105,9 +102,7 @@ const PlayAnime = ({ id }) => {
 
             <div className="container mx-auto px-6 py-12">
                 <div className="flex flex-col lg:flex-row gap-12">
-                    {/* Left Column: Details & Content */}
                     <div className="flex-1">
-                        {/* Stats Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
                             <div className="bg-gray-900/50 p-4 rounded-2xl border border-gray-800 text-center">
                                 <p className="text-gray-500 text-xs uppercase font-bold mb-1">Score</p>
@@ -127,7 +122,6 @@ const PlayAnime = ({ id }) => {
                             </div>
                         </div>
 
-                        {/* Synopsis */}
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
@@ -138,7 +132,6 @@ const PlayAnime = ({ id }) => {
                             </p>
                         </div>
 
-                        {/* Trailer or Video Player Section */}
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                                 <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
@@ -149,11 +142,9 @@ const PlayAnime = ({ id }) => {
                             </div>
                         </div>
 
-                        {/* Images */}
                         <Images id={id} />
                     </div>
 
-                    {/* Right Column: Episodes & Recommendations */}
                     <div className="w-full lg:w-96 flex flex-col gap-10">
                         <section className="bg-gray-900/50 rounded-3xl border border-gray-800 overflow-hidden shadow-xl">
                             <div className="p-6 border-b border-gray-800 flex items-center justify-between">

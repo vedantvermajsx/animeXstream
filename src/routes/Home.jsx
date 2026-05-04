@@ -5,7 +5,6 @@ import Header from "../components/Header";
 function Home() {
   return (
     <>
-      <Header isHome={true} />
       <Hero />
       <AnimeList />
     </>
