@@ -51,7 +51,7 @@ const WatchNow = () => {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-950 text-white">
       <div className="flex-1 p-4 lg:p-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto mt-16">
           <div className="mb-6">
             <h2 className="text-gray-400 text-sm font-medium mb-1 flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
@@ -84,7 +84,7 @@ const WatchNow = () => {
         </div>
       </div>
 
-      <aside className="w-full lg:w-[400px] bg-gray-900/90 backdrop-blur-md border-l border-gray-800 flex flex-col h-[600px] lg:h-screen sticky top-0">
+      <aside className="w-full lg:w-[400px] bg-gray-900/90 backdrop-blur-md border-l border-gray-800 flex flex-col h-[600px] lg:h-screen sticky top-0 mt-16">
         <div className="p-6 border-b border-gray-800 flex items-center justify-between bg-gray-900/50">
           <h2 className="text-xl font-bold flex items-center gap-2">
             Episodes
@@ -93,7 +93,7 @@ const WatchNow = () => {
             {episodes.length} Available
           </span>
         </div>
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-gray-900">
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-gray-900 ">
           <Episodes id={id} episodes={episodes} />
         </div>
       </aside>
