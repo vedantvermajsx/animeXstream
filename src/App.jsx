@@ -3,9 +3,12 @@ import Home from "./routes/Home";
 import Play from "./routes/Play";
 import Footer from "./components/Footer";
 import Watch from "./routes/Watch";
+import ScrollToTop from "./components/ScrollToTop";
+
 function App() {
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/play/:id" element={<Play />} />
